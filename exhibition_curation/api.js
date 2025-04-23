@@ -1,20 +1,16 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "https://api.artic.edu/api/v1/artworks",
-});
 
-const fetchArticles = (sortQuery) => {
-    return api.get(`/`).then((response) => {
-      return response.data.data;
-    });
+const fetchArtworks = () => {
+  return axios.get(`http://api.artic.edu/api/v1/artworks/`).then((response) => {
+    return response.data.data;
+  });
 };
 
+const postUser = (newUser) => {
+  return axios.post(`http://localhost:3000/register`, newUser).then((response) => {
+    return response.data.user;
+  });
+};
 
-
-export{
-    fetchArticles
-}
-
-
-
+export { fetchArtworks, postUser };

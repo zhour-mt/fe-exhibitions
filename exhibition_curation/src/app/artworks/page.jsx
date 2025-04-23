@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { fetchArticles } from "../../../api";
+import { fetchArtworks } from "../../../api";
 import ArtworkCard from "./ArtworkCard";
 
 export default function Artworks() {
@@ -13,7 +13,7 @@ export default function Artworks() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchArticles()
+    fetchArtworks()
       .then((artworkData) => {
         setArtworks(artworkData);
         setIsLoading(false);
