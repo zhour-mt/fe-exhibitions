@@ -3,17 +3,15 @@
 import Link from "next/link";
 
 import { useState } from "react";
-import { postUser } from "../../../api";
-import { useRouter } from 'next/navigation'
+import { loginUser } from "../../../api";
+import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
-  const [userData, setUserData] = useState({
+export default function Login() {
+  const [userLogin, setUserLogin] = useState({
     username: "",
-    email: "",
     password: "",
   });
-
-
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState(null);
@@ -23,22 +21,29 @@ export default function RegisterPage() {
   const handleChange = (event) => {
     const type = event.target.id;
     const input = event.target.value;
-    setUserData({ ...userData, [type]: input });
+    setUserLogin({ ...userLogin, [type]: input });
   };
-  console.log(userData);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setIsLoading(true);
-    return postUser(userData)
-      .then(() => {
-        setWelcome(`Welcome to ArtArchive, ${userData.username}`);
-        console.log("hi");
+    return loginUser(userLogin)
+      .then((response) => {
+        console.log(response.token);
+        const token = response.token;
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token", token);
+        }
+
+        setWelcome(`Welcome back to CurationStudio, ${userLogin.username}`);
         setIsLoading(false);
         setError(null);
+        router.push("/dashboard")
       })
       .catch((err) => {
         setError("Something went wrong. Please try again.");
+        console.log(err)
         setIsLoading(false);
       });
   };
@@ -61,29 +66,7 @@ export default function RegisterPage() {
               id="username"
               type="text"
               onChange={handleChange}
-              value={userData.username}
-              required
-            />
-          </div>
-        </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label
-              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-              htmlFor="inline-email"
-              type="email"
-              id="email"
-            >
-              Email
-            </label>
-          </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              id="email"
-              type="text"
-              onChange={handleChange}
-              value={userData.email}
+              value={userLogin.username}
               required
             />
           </div>
@@ -103,7 +86,7 @@ export default function RegisterPage() {
               id="password"
               type="password"
               onChange={handleChange}
-              value={userData.password}
+              value={userLogin.password}
               required
             />
           </div>
@@ -117,18 +100,18 @@ export default function RegisterPage() {
               disabled={isLoading}
             >
               {" "}
-              Sign Up
+              Sign In
             </button>
           </div>
         </div>
         <div className="text-center">
-          <p className="mb-2 text-gray-600">Already have an account?</p>
-          <Link href="/login">
+          <p className="mb-2 text-gray-600">New to CurationStudio?</p>
+          <Link href="/register">
             <button
               type="button"
               className="bg-gray-200 hover:bg-gray-300 text-black font-semibold py-2 px-4 rounded"
             >
-              Go to Login
+              Register
             </button>
           </Link>
         </div>
