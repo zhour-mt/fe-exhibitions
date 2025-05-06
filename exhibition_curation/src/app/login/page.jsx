@@ -29,7 +29,6 @@ export default function Login() {
     setIsLoading(true);
     return loginUser(userLogin)
       .then((response) => {
-        console.log(response.token);
         const token = response.token;
 
         if (typeof window !== "undefined") {
@@ -39,88 +38,78 @@ export default function Login() {
         setWelcome(`Welcome back to CurationStudio, ${userLogin.username}`);
         setIsLoading(false);
         setError(null);
-        router.push("/dashboard")
+        router.push("/dashboard");
       })
       .catch((err) => {
-        setError("Something went wrong. Please try again.");
-        console.log(err)
+        setError(err.response.data.message);
         setIsLoading(false);
       });
   };
 
   return (
-    <div>
-      <form className="w-full max-w-sm" onSubmit={handleSubmit}>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
+    <main className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center px-4">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold text-purple-700 mb-6 text-center">
+          Welcome back to CurationStudio
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
             <label
-              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-              htmlFor="inline-full-name"
+              htmlFor="username"
+              className="block font-medium text-gray-700 mb-1"
             >
               Username
             </label>
-          </div>
-          <div className="md:w-2/3">
             <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
               id="username"
               type="text"
-              onChange={handleChange}
               value={userLogin.username}
+              onChange={handleChange}
               required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
             />
           </div>
-        </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
+
+          <div>
             <label
-              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-              htmlFor="inline-password"
+              htmlFor="password"
+              className="block font-medium text-gray-700 mb-1"
             >
               Password
             </label>
-          </div>
-          <div className="md:w-2/3">
             <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
               id="password"
               type="password"
-              onChange={handleChange}
               value={userLogin.password}
+              onChange={handleChange}
               required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
             />
           </div>
-        </div>
-        <div className="md:flex md:items-center">
-          <div className="md:w-1/3"></div>
-          <div className="md:w-2/3">
-            <button
-              className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-              type="submit"
-              disabled={isLoading}
-            >
-              {" "}
-              Sign In
-            </button>
-          </div>
-        </div>
-        <div className="text-center">
-          <p className="mb-2 text-gray-600">New to CurationStudio?</p>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all"
+          >
+            {isLoading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+
+        {error && (
+          <p className="text-red-500 mt-4 text-sm text-center">{error}</p>
+        )}
+
+        <div className="text-center mt-6">
+          <p className="text-gray-600 mb-2">New to CurationStudio?</p>
           <Link href="/register">
-            <button
-              type="button"
-              className="bg-gray-200 hover:bg-gray-300 text-black font-semibold py-2 px-4 rounded"
-            >
+            <button className="bg-gray-100 hover:bg-gray-200 text-black font-medium py-2 px-4 rounded-lg transition">
               Register
             </button>
           </Link>
         </div>
-      </form>
-      <div>
-        {welcome && <p>{welcome}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {isLoading && <p>Loading...</p>}
       </div>
-    </div>
+    </main>
   );
 }
