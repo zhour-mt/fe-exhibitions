@@ -1,15 +1,12 @@
-
-
 "use client";
 
-import { use } from "react";
-
+import { useParams } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import { fetchExhibitionById } from "../../../../../api";
 
 export default function ExhibitionById({ params }) {
-  const { id } = use(params);
+  const { id } = useParams();
   const [exhibition, setExhibition] = useState([]);
 
   useEffect(() => {
@@ -23,5 +20,5 @@ export default function ExhibitionById({ params }) {
       });
   }, []);
 
-  return 
+  return;
 }

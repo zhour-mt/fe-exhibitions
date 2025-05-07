@@ -159,6 +159,8 @@ export default function Artworks() {
           <p className="text-center text-purple-600 text-lg py-10">
             Loading artworks...
           </p>
+        ) : processedArtworks.length === 0 ? (
+          <p className="text-center text-gray-500 mt-4">No artworks found.</p>
         ) : (
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {processedArtworks.map((artwork) => (
@@ -170,9 +172,6 @@ export default function Artworks() {
               />
             ))}
           </ul>
-        )}
-        {processedArtworks.length === 0 && (
-          <p className="text-center text-gray-500 mt-4">No artworks found.</p>
         )}
       </div>
 

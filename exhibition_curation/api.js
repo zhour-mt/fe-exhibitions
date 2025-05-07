@@ -126,7 +126,7 @@ const fetchHarvardArtworkById = (id) => {
 
 const postUser = (newUser) => {
   return axios
-    .post(`http://localhost:9000/api/register`, newUser)
+    .post(`https://be-exhibitions.onrender.com/api/register`, newUser)
     .then((response) => {
       return response.data.user;
     }).catch((err) => {
@@ -136,7 +136,7 @@ const postUser = (newUser) => {
 
 const loginUser = (user) => {
   return axios
-    .post(`http://localhost:9000/api/login`, user)
+    .post(`https://be-exhibitions.onrender.com/api/login`, user)
     .then((response) => {
       localStorage.setItem("username", user.username);
       return response.data;
@@ -146,7 +146,7 @@ const loginUser = (user) => {
 const dashboard = () => {
   const token = localStorage.getItem("token");
   return axios
-    .get("http://localhost:9000/api/dashboard", {
+    .get("https://be-exhibitions.onrender.com/api/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -162,7 +162,7 @@ const dashboard = () => {
 const fetchExhibitions = () => {
   const token = localStorage.getItem("token");
   return axios
-    .get("http://localhost:9000/api/user/exhibitions", {
+    .get("https://be-exhibitions.onrender.com/api/user/exhibitions", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -175,7 +175,7 @@ const fetchExhibitions = () => {
 const postExhibition = (newExhibition) => {
   const token = localStorage.getItem("token");
   return axios
-    .post("http://localhost:9000/api/user/exhibitions", newExhibition, {
+    .post("https://be-exhibitions.onrender.com/api/user/exhibitions", newExhibition, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -188,7 +188,7 @@ const postExhibition = (newExhibition) => {
 const deleteExhibition = (id) => {
   const token = localStorage.getItem("token");
   return axios
-    .delete(`http://localhost:9000/api/user/exhibitions/${id}`, {
+    .delete(`https://be-exhibitions.onrender.com/api/user/exhibitions/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -201,7 +201,7 @@ const deleteExhibition = (id) => {
 const fetchExhibitionById = (id) => {
   const token = localStorage.getItem("token");
   return axios
-    .get(`http://localhost:9000/api/user/exhibitions/${id}/artworks`, {
+    .get(`https://be-exhibitions.onrender.com/api/user/exhibitions/${id}/artworks`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -214,7 +214,7 @@ const fetchExhibitionById = (id) => {
 const fetchSavedArtworks = () => {
   const token = localStorage.getItem("token");
   return axios
-    .get(`http://localhost:9000/api/user/exhibitions/artworks`, {
+    .get(`https://be-exhibitions.onrender.com/api/user/exhibitions/artworks`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -229,7 +229,7 @@ const fetchSavedArtworks = () => {
 const saveArtwork = (artwork) => {
   const token = localStorage.getItem("token");
   return axios
-    .post("http://localhost:9000/api/user/exhibitions/artworks", artwork, {
+    .post("https://be-exhibitions.onrender.com/api/user/exhibitions/artworks", artwork, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -243,7 +243,7 @@ const deleteArtwork = (artwork_id) => {
   const token = localStorage.getItem("token");
   return axios
     .delete(
-      `http://localhost:9000/api/user/exhibitions/artworks/${artwork_id}`,
+      `https://be-exhibitions.onrender.com/api/user/exhibitions/artworks/${artwork_id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -263,7 +263,7 @@ const fetchGuestArtworks = () => {
   }
 
   return axios
-    .get("http://localhost:9000/api/exhibitions/guest-artworks", {
+    .get("https://be-exhibitions.onrender.com/api/exhibitions/guest-artworks", {
       params: { guest_session_id },
     })
     .then((response) => {
@@ -278,7 +278,7 @@ const postGuestArtworks = (artwork) => {
   }
 
   return axios
-    .post("http://localhost:9000/api/exhibitions/guest-artworks", artwork, {
+    .post("https://be-exhibitions.onrender.com/api/exhibitions/guest-artworks", artwork, {
       params: { guest_session_id },
     })
     .then((response) => {
@@ -295,7 +295,7 @@ const deleteGuestArtwork = (artwork_id) => {
 
   return axios
     .delete(
-      `http://localhost:9000/api/exhibitions/guest-artworks/${artwork_id}`,
+      `https://be-exhibitions.onrender.com/api/exhibitions/guest-artworks/${artwork_id}`,
       {
         params: { guest_session_id },
       }
@@ -305,7 +305,7 @@ const deleteGuestArtwork = (artwork_id) => {
     });
 };
 
-{
+export {
   fetchChicagoArtworks,
   postUser,
   loginUser,
@@ -321,5 +321,6 @@ const deleteGuestArtwork = (artwork_id) => {
   fetchGuestArtworks,
   fetchHarvardArtworks,
   fetchHarvardArtworkById,
-  postGuestArtworks, deleteGuestArtwork
+  postGuestArtworks,
+  deleteGuestArtwork
 };

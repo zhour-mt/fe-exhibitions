@@ -29,7 +29,7 @@ export default function GuestSavedArtworksList() {
           <h2 className="text-2xl font-bold text-purple-700 tracking-wide text-center sm:text-left">
           Your Saved Artworks
           </h2>
-          <Link href="/dashboard">
+          <Link href="/artworks">
             <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition">
               Browse artworks →
             </button>

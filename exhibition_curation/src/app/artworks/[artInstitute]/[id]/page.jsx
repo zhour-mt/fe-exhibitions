@@ -1,13 +1,13 @@
 "use client";
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 
 import { fetchChicagoArtworkById, fetchHarvardArtworkById } from "../../../../../api";
 
 import { useState, useEffect } from "react";
 
-export default function ArtworkById({ params }) {
-  const { id, artInstitute } = use(params);
+export default function ArtworkById() {
+  const { id, artInstitute } = useParams()
   const [artwork, setArtwork] = useState([]);
   const [error, setError] = useState(null);
 
