@@ -5,7 +5,7 @@ This is the frontend repository for CurationStudio, a web application that allow
 - Harvard Art Museums.
 
 ## 🌐 Live Demo
-Visit the live application [here]().
+Visit the live application [here](https://curation-studio.netlify.app ).
 
 
 ## ✨ Features
