@@ -43,7 +43,6 @@ export default function Login() {
       })
       .catch((err) => {
         setError(err.response.data.message);
-        console.log(err)
         setIsLoading(false);
       });
   };
