@@ -21,7 +21,6 @@ export default function ArtworkById() {
       .catch((err) => setError(err));
   }, [id, artInstitute]);
 
-  console.log(artwork)
 
 
   return (

@@ -51,18 +51,22 @@ Your Harvard API key can be extracted by filling in the following [form](https:/
 ### 4. Start the development server
 ```bash
 npm run dev
-Visit http://localhost:3000 in your browser.
 ```
+Visit http://localhost:3000 in your browser.
+
 
 
 ### 📁 Folder Structure
-```bash
+
 src/app – Pages and route handlers
 
-api.js – Axios-based API utility for frontend-backend interaction
+api.js – Axios-based API functions for interaction between the frontend and backend
 
 public/ – Static assets
-```
 
 ### 📦 Deployment
 This app can be deployed on Netlify or Vercel as a static Next.js project. Make sure to set the correct environment variables in your platform's dashboard.
+
+### 🔗 API Access
+Most API requests are made to the live backend at:
+https://be-exhibitions.onrender.com

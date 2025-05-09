@@ -6,6 +6,7 @@ import {
   fetchGuestArtworks,
   fetchHarvardArtworks,
   fetchSavedArtworks,
+  fetchExhibitions,
 } from "../../../api";
 import Link from "next/link";
 import ArtworkCard from "./ArtworkCard";
@@ -14,6 +15,8 @@ export default function Artworks() {
   const [artworks, setArtworks] = useState([]);
 
   const [likedArt, setLikedArt] = useState([]);
+
+  const [exhibitions, setExhibitions] = useState([]);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -37,16 +40,23 @@ export default function Artworks() {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      fetchSavedArtworks().then((data) => {
-        const ids = data.map((art) => art.artwork_id);
-        setLikedArt(ids);
+      fetchSavedArtworks().then((response) => {
+        const artIds = response.map((art) => art.artwork_id);
+        setLikedArt(artIds);
       });
+      fetchExhibitions()
+        .then((response) => {
+          setExhibitions(response);
+        })
+        .catch((err) => {
+          setError(err);
+        });
     } else {
       const guestSessionId = localStorage.getItem("guest_session_id");
       if (guestSessionId) {
-        fetchGuestArtworks().then((data) => {
-          const ids = data.map((art) => art.artwork_id);
-          setLikedArt(ids);
+        fetchGuestArtworks().then((response) => {
+          const artIds = response.map((art) => art.artwork_id);
+          setLikedArt(artIds);
         });
       }
     }
@@ -54,7 +64,7 @@ export default function Artworks() {
     const fetcher =
       artInstitute === "aic" ? fetchChicagoArtworks : fetchHarvardArtworks;
 
-    fetcher({ page, limit: 20, searchTerm, filter })
+    fetcher({ page, limit: 20, searchTerm })
       .then(({ artworks, pagination }) => {
         setArtworks(artworks);
         setPagination(pagination);
@@ -64,28 +74,35 @@ export default function Artworks() {
         setError(err);
         setIsLoading(false);
       });
-  }, [page, searchTerm, filter, artInstitute]);
+  }, [page, searchTerm, artInstitute]);
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
+  const handleSearch = (event) => {
+    const term = event.target.value.toLowerCase();
     setSearchTerm(term);
   };
 
-  const processedArtworks = artworks
+  const filteredArtworks = artworks
     .filter((art) => {
-      const title = art.title?.toLowerCase() || "";
-      const artist = art.artist_title?.toLowerCase() || "";
-      const matchesSearch =
-        title.includes(searchTerm) || artist.includes(searchTerm);
-      const matchesFilter = filter ? art.artwork_type_title === filter : true;
-      return matchesSearch && matchesFilter;
+      const title = (art.title || "").toLowerCase();
+      const artist = (art.artist_title || art.artist || "").toLowerCase();
+      const type = art.artwork_type_title || art.classification || "";
+
+      const artworkMatchingSearch = title.includes(searchTerm) || artist.includes(searchTerm);
+
+      const artworkMatchingFilter = filter ? type === filter : true;
+
+      return artworkMatchingSearch && artworkMatchingFilter;
     })
     .sort((a, b) => {
-      if (sort === "title-asc") return a.title.localeCompare(b.title);
-      if (sort === "title-desc") return b.title.localeCompare(a.title);
-      if (sort === "date-asc") return (a.date_start || 0) - (b.date_start || 0);
-      if (sort === "date-desc")
-        return (b.date_start || 0) - (a.date_start || 0);
+      const titleA = a.title || "";
+      const titleB = b.title || "";
+      const dateA = a.date_start || a.begin_date || 0;
+      const dateB = b.date_start || b.begin_date || 0;
+
+      if (sort === "title-asc") return titleA.localeCompare(titleB);
+      if (sort === "title-desc") return titleB.localeCompare(titleA);
+      if (sort === "date-asc") return dateA - dateB;
+      if (sort === "date-desc") return dateB - dateA;
       return 0;
     });
 
@@ -120,33 +137,41 @@ export default function Artworks() {
           </select>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-between mb-6">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="px-4 py-2 border rounded w-full sm:w-1/2"
-          >
-            <option value="">All Types</option>
-            <option value="Painting">Painting</option>
-            <option value="Architectural Drawing">Architectural Drawing</option>
-            <option value="Basketry">Basketry</option>
-            <option value="Print">Print</option>
-            <option value="Textile">Textile</option>
-            <option value="Sculpture">Sculpture</option>
-            <option value="Vessel">Vessel</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Costume and Accessories">
-              Costume and Accessories
-            </option>
-            <option value="Metalwork">Metalwork</option>
-            <option value="Photograph">Photograph</option>
-            <option value="Drawing and Watercolor">
-              Drawing and Watercolor
-            </option>
-          </select>
+          {artInstitute === "aic" ? (
+            <select
+              value={filter}
+              onChange={(event) => setFilter(event.target.value)}
+              className="px-4 py-2 border rounded w-full sm:w-1/2"
+            >
+              <option value="">Art Types</option>
+              <option value="Painting">Painting</option>
+              <option value="Architectural Drawing">
+                Architectural Drawing
+              </option>
+              <option value="Basketry">Basketry</option>
+              <option value="Print">Print</option>
+              <option value="Textile">Textile</option>
+              <option value="Sculpture">Sculpture</option>
+              <option value="Vessel">Vessel</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Costume and Accessories">
+                Costume and Accessories
+              </option>
+              <option value="Metalwork">Metalwork</option>
+              <option value="Photograph">Photograph</option>
+              <option value="Drawing and Watercolor">
+                Drawing and Watercolor
+              </option>
+            </select>
+          ) : (
+            <p className="text-gray-500 italic self-center">
+              Filtering by type unavailable for Harvard Art Museums.
+            </p>
+          )}
 
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(event) => setSort(event.target.value)}
             className="px-4 py-2 border rounded w-full sm:w-1/2"
           >
             <option value="title-asc">Title (A–Z)</option>
@@ -155,20 +180,22 @@ export default function Artworks() {
             <option value="date-desc">Date (Newest first)</option>
           </select>
         </div>
+
         {isLoading ? (
           <p className="text-center text-purple-600 text-lg py-10">
             Loading artworks...
           </p>
-        ) : processedArtworks.length === 0 ? (
+        ) : filteredArtworks.length === 0 ? (
           <p className="text-center text-gray-500 mt-4">No artworks found.</p>
         ) : (
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {processedArtworks.map((artwork) => (
+            {filteredArtworks.map((artwork) => (
               <ArtworkCard
                 artwork={artwork}
                 key={artwork.id}
                 likedArt={likedArt}
                 artInstitute={artInstitute}
+                exhibitions={exhibitions}
               />
             ))}
           </ul>

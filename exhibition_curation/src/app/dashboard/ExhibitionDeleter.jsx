@@ -27,7 +27,6 @@ export default function ExhibitionDeleter({
     <>
       <button
         onClick={handleClick}
-        className="p-1 rounded-full hover:bg-red-100 active:bg-red-200 transition duration-200 disabled:opacity-50"
         title="Delete exhibition"
       >
         🗑️

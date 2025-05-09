@@ -17,6 +17,8 @@ export default function UserIcon() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    setIsLoggedIn(false);
+    setShowLogout(false);
     router.push("/");
   };
 

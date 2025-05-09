@@ -15,6 +15,7 @@ export default function CreateExhibitionModal({
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null)
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -33,7 +34,7 @@ export default function CreateExhibitionModal({
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        setError(err)
       });
   };
 
@@ -71,7 +72,7 @@ export default function CreateExhibitionModal({
             </button>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !exhibitionData.title.trim()}
               className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
             >
               {isLoading ? "Creating..." : "Create"}

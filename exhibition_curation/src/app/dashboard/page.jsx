@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { fetchExhibitions } from "../../../api";
 import ExhibitionCard from "./ExhibitionCard";
-import Image from "next/image";
 import CreateExhibitionModal from "./CreateExhibitionModal";
 import Link from "next/link";
 import SavedArtworks from "../saved/SavedArtworks";
@@ -16,11 +14,14 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
 
   const [username, setUsername] = useState("");
-
+  
+  
   useEffect(() => {
-    const storedName = localStorage.getItem("username");
-    if (storedName) setUsername(storedName);
-  }, []);
+      const storedName = localStorage.getItem("username");
+      if (storedName) setUsername(storedName);
+    }, []);
+    
+    
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -51,10 +52,19 @@ export default function Dashboard() {
     <ProtectedRoute>
       <main className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 flex justify-center px-6 py-10">
         <div className="bg-white p-10 rounded-xl shadow-lg text-center max-w-6xl w-full">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-purple-700">{username}'s Curation Studio</h1>
+          <div className="flex justify-between items-center mb-1">
+            <h1 className="text-3xl font-bold text-purple-700">
+              {username}'s Curation Studio
+            </h1>
             <LogoutButton />
           </div>
+          <section>
+            <Link href="/artworks" className="w-full">
+              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 my-5 mb-7 rounded-lg transition-all">
+                Explore Artworks →
+              </button>
+            </Link>
+          </section>
           <div>
             <SavedArtworks />
           </div>
@@ -90,21 +100,10 @@ export default function Dashboard() {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 italic mb-8">
+            <p className="text-gray-700 justify-left mb-4">
               You haven’t added any exhibitions yet.
             </p>
           )}
-
-          <section>
-            <h2 className="text-xl font-semibold mb-2 justify-left">
-              Explore More
-            </h2>
-            <Link href="/artworks" className="w-full">
-              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all">
-                Explore Artworks →
-              </button>
-            </Link>
-          </section>
         </div>
       </main>
     </ProtectedRoute>

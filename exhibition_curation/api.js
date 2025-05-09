@@ -1,4 +1,5 @@
 import axios from "axios";
+import next from "next";
 
 axios.interceptors.response.use(
   function (response) {
@@ -98,7 +99,6 @@ const fetchChicagoArtworkById = (id) => {
     });
 };
 
-
 const fetchHarvardArtworkById = (id) => {
   const apiKey = process.env.NEXT_PUBLIC_HARVARD_API_KEY;
 
@@ -129,9 +129,10 @@ const postUser = (newUser) => {
     .post(`https://be-exhibitions.onrender.com/api/register`, newUser)
     .then((response) => {
       return response.data.user;
-    }).catch((err) => {
-      return err
     })
+    .catch((err) => {
+      return err;
+    });
 };
 
 const loginUser = (user) => {
@@ -152,10 +153,10 @@ const dashboard = () => {
       },
     })
     .then((response) => {
-      console.log(response.data);
+      return response
     })
     .catch((error) => {
-      console.error(error);
+      next(err)
     });
 };
 
@@ -175,11 +176,15 @@ const fetchExhibitions = () => {
 const postExhibition = (newExhibition) => {
   const token = localStorage.getItem("token");
   return axios
-    .post("https://be-exhibitions.onrender.com/api/user/exhibitions", newExhibition, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    .post(
+      "https://be-exhibitions.onrender.com/api/user/exhibitions",
+      newExhibition,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
     .then((response) => {
       return response.data.exhibition;
     });
@@ -201,13 +206,16 @@ const deleteExhibition = (id) => {
 const fetchExhibitionById = (id) => {
   const token = localStorage.getItem("token");
   return axios
-    .get(`https://be-exhibitions.onrender.com/api/user/exhibitions/${id}/artworks`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    .get(
+      `https://be-exhibitions.onrender.com/api/user/exhibitions/${id}/artworks`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
     .then((response) => {
-      return response.data;
+      return response.data.exhibition;
     });
 };
 
@@ -221,7 +229,6 @@ const fetchSavedArtworks = () => {
       },
     })
     .then((response) => {
-      console.log(response.data.saveArtworks)
       return response.data.savedArtworks;
     });
 };
@@ -229,11 +236,15 @@ const fetchSavedArtworks = () => {
 const saveArtwork = (artwork) => {
   const token = localStorage.getItem("token");
   return axios
-    .post("https://be-exhibitions.onrender.com/api/user/exhibitions/artworks", artwork, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    .post(
+      "https://be-exhibitions.onrender.com/api/user/exhibitions/artworks",
+      artwork,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
     .then((response) => {
       return response.data.exhibition;
     });
@@ -278,9 +289,13 @@ const postGuestArtworks = (artwork) => {
   }
 
   return axios
-    .post("https://be-exhibitions.onrender.com/api/exhibitions/guest-artworks", artwork, {
-      params: { guest_session_id },
-    })
+    .post(
+      "https://be-exhibitions.onrender.com/api/exhibitions/guest-artworks",
+      artwork,
+      {
+        params: { guest_session_id },
+      }
+    )
     .then((response) => {
       return response.data.savedArtwork;
     });
@@ -305,6 +320,25 @@ const deleteGuestArtwork = (artwork_id) => {
     });
 };
 
+const saveArtworkToExhibition = (exhibition_id, artworkData, token) => {
+  return axios
+    .post(
+      `https://be-exhibitions.onrender.com/api/user/exhibitions/${exhibition_id}/artwork`,
+      artworkData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 export {
   fetchChicagoArtworks,
   postUser,
@@ -322,5 +356,6 @@ export {
   fetchHarvardArtworks,
   fetchHarvardArtworkById,
   postGuestArtworks,
-  deleteGuestArtwork
+  deleteGuestArtwork,
+  saveArtworkToExhibition,
 };

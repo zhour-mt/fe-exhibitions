@@ -7,11 +7,18 @@ export default function ExhibitionCard({
   exhibitions,
   setExhibitions,
 }) {
+
   return (
     <div className="flex flex-col bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full">
       <div className="p-4 flex flex-col justify-between flex-grow">
         <Link
-          href={`/exhibitions/${exhibition.id}`}
+          href={{
+            pathname: `/exhibitions/${exhibition.id}`,
+            query: {
+              title: exhibition.title,
+              description: exhibition.description,
+            },
+          }}
           className="p-1 flex flex-col justify-between flex-grow hover:cursor-pointer"
         >
           <div className="flex justify-center">

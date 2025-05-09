@@ -34,6 +34,7 @@ export default function Login() {
         if (typeof window !== "undefined") {
           localStorage.setItem("token", token);
         }
+      
 
         setWelcome(`Welcome back to CurationStudio, ${userLogin.username}`);
         setIsLoading(false);
@@ -42,6 +43,7 @@ export default function Login() {
       })
       .catch((err) => {
         setError(err.response.data.message);
+        console.log(err)
         setIsLoading(false);
       });
   };

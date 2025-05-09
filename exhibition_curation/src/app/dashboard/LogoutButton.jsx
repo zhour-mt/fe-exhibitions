@@ -4,8 +4,8 @@ export default function LogoutButton() {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    router.push("/"); 
+    localStorage.removeItem("token");
+    router.push("/");
   };
 
   return (
